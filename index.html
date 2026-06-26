@@ -1,549 +1,678 @@
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New England Patriots · Cultura Digital II</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
+:root{
+  --navy:#002244;--red:#C8102E;--silver:#B0B7BC;
+  --white:#fff;--bg:#f4f6f9;--card:#fff;
+  --text:#1a1a2e;--muted:#5a6478;--border:#dde3ec;
+  --radius:14px;--shadow:0 4px 20px rgba(0,0,0,.10);
+}
 *{box-sizing:border-box;margin:0;padding:0;}
-body,html{font-family:var(--font-sans);background:var(--color-background-primary);color:var(--color-text-primary);}
-.navy{background:#002244;color:#fff;}
-.red{color:#C8102E;}
-a{text-decoration:none;}
+html{scroll-behavior:smooth;font-size:18px;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.75;}
 
-.hero{background:#002244;padding:2.5rem 1.25rem 3rem;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent,transparent 40px,rgba(200,16,46,.06) 40px,rgba(200,16,46,.06) 42px);}
-.hero-inner{position:relative;z-index:1;max-width:900px;margin:0 auto;}
-.hero-tag{display:inline-block;background:#C8102E;color:#fff;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;padding:.3em .9em;border-radius:4px;margin-bottom:.75rem;}
-.hero h1{font-size:2.4rem;font-weight:500;color:#fff;line-height:1.1;}
-.hero h1 span{color:#C8102E;display:block;}
-.hero-desc{color:#B0B7BC;margin-top:.6rem;font-size:.9rem;line-height:1.65;max-width:500px;}
-.kpis{display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap;}
-.kpi .n{font-size:2rem;font-weight:500;color:#C8102E;line-height:1;}
-.kpi .l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#B0B7BC;margin-top:3px;}
+/* NAV */
+.navbar{background:var(--navy);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.4);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:1100px;margin:0 auto;padding:0 1.5rem;}
+.brand{color:#fff;font-weight:700;font-size:1.1rem;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:.5rem;}
+.nav-links{display:flex;gap:.2rem;list-style:none;}
+.nav-links a{color:var(--silver);font-size:.82rem;padding:.45rem .75rem;border-radius:8px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;transition:.2s;text-decoration:none;}
+.nav-links a:hover{background:var(--red);color:#fff;}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:.4rem;}
+.hamburger span{display:block;width:24px;height:2px;background:#fff;border-radius:2px;}
+.nav-mobile{display:none;background:#001838;padding:.5rem 0;}
+.nav-mobile a{display:block;padding:.7rem 1.5rem;color:var(--silver);font-size:1rem;text-decoration:none;}
+.nav-mobile a:hover{color:#fff;background:var(--red);}
+.nav-mobile.open{display:block;}
 
-nav{background:#001a38;display:flex;gap:4px;padding:.5rem 1.25rem;flex-wrap:wrap;}
-nav a{color:#B0B7BC;font-size:12px;padding:.35rem .65rem;border-radius:var(--border-radius-md);font-weight:500;text-transform:uppercase;letter-spacing:.06em;transition:.15s;}
-nav a:hover{background:#C8102E;color:#fff;}
+/* HERO */
+.hero{background:var(--navy);padding:5rem 0 4rem;position:relative;overflow:hidden;clip-path:polygon(0 0,100% 0,100% 88%,0 100%);margin-bottom:-1rem;}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent,transparent 45px,rgba(200,16,46,.05) 45px,rgba(200,16,46,.05) 47px);}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem;}
+.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2rem;}
+.hero-tag{display:inline-block;background:var(--red);color:#fff;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:.35em 1.1em;border-radius:5px;margin-bottom:.9rem;}
+.hero h1{font-size:clamp(2.8rem,6vw,4.5rem);font-weight:900;color:#fff;text-transform:uppercase;line-height:1.05;}
+.hero h1 em{color:var(--red);font-style:normal;display:block;}
+.hero-desc{color:var(--silver);margin-top:.8rem;max-width:540px;font-size:1.05rem;line-height:1.7;}
+.hero-kpis{display:flex;gap:2.5rem;margin-top:2rem;flex-wrap:wrap;}
+.kpi .big{font-size:2.6rem;font-weight:900;color:var(--red);line-height:1;}
+.kpi .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--silver);margin-top:4px;}
+.hero-emoji{font-size:clamp(6rem,12vw,10rem);filter:drop-shadow(0 0 30px rgba(200,16,46,.4));user-select:none;}
 
-.section{padding:2.5rem 1.25rem;border-top:.5px solid var(--color-border-tertiary);max-width:900px;margin:0 auto;}
-.eyebrow{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:#C8102E;margin-bottom:.3rem;}
-.stitle{font-size:1.5rem;font-weight:500;color:var(--color-text-primary);margin-bottom:.3rem;line-height:1.2;}
-.stitle span{color:#C8102E;}
-.ssub{color:var(--color-text-secondary);font-size:.85rem;margin-bottom:1.75rem;}
+/* SECCIONES */
+.section{padding:4rem 0;border-top:1px solid var(--border);}
+.sec-eyebrow{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--red);margin-bottom:.4rem;}
+.sec-title{font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:800;color:var(--navy);margin-bottom:.4rem;line-height:1.2;}
+.sec-title span{color:var(--red);}
+.sec-sub{color:var(--muted);font-size:.95rem;margin-bottom:2rem;max-width:720px;}
 
-.prose{font-size:.9rem;line-height:1.85;color:var(--color-text-primary);}
-.prose p{margin-bottom:1rem;}
+/* PROSE */
+.prose{font-size:1rem;line-height:1.9;color:#2d3748;max-width:850px;}
+.prose p{margin-bottom:1.2rem;}
 .prose p:last-child{margin-bottom:0;}
 
-.tl{display:flex;flex-direction:column;gap:0;}
-.tli{display:flex;gap:1.25rem;position:relative;}
-.tli::before{content:'';position:absolute;left:32px;top:44px;bottom:0;width:1.5px;background:var(--color-border-tertiary);}
-.tli:last-child::before{display:none;}
-.tl-y{background:#002244;color:#C8102E;font-weight:500;font-size:.78rem;text-align:center;padding:.4rem .4rem;border-radius:var(--border-radius-md);white-space:nowrap;min-width:62px;height:36px;display:flex;align-items:center;justify-content:center;}
-.tl-dot{width:10px;height:10px;border-radius:50%;background:#C8102E;margin:6px auto 0;flex-shrink:0;}
-.tl-side{display:flex;flex-direction:column;align-items:center;width:62px;flex-shrink:0;}
-.tl-body{padding:0 0 1.75rem;}
-.tl-body h4{font-size:.9rem;font-weight:500;color:var(--color-text-primary);margin-bottom:.2rem;}
-.tl-body p{font-size:.8rem;color:var(--color-text-secondary);line-height:1.6;}
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:1.5rem;position:relative;}
+.tl-item::before{content:'';position:absolute;left:38px;top:50px;bottom:0;width:2px;background:var(--border);}
+.tl-item:last-child::before{display:none;}
+.tl-left{display:flex;flex-direction:column;align-items:center;min-width:76px;}
+.tl-year{background:var(--navy);color:var(--red);font-weight:900;font-size:.88rem;text-align:center;padding:.5rem .5rem;border-radius:8px;white-space:nowrap;}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:var(--red);margin:8px 0 0;}
+.tl-content{padding:0 0 2.5rem;}
+.tl-content h4{font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:.35rem;}
+.tl-content p{font-size:.95rem;color:var(--muted);line-height:1.7;}
 
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.85rem;}
-.pcard{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;transition:.2s;}
-.pcard:hover{border-color:#C8102E;}
-.pcard-body{padding:.75rem;}
-.pname{font-size:.85rem;font-weight:500;color:var(--color-text-primary);}
-.ppos{font-size:.73rem;color:var(--color-text-secondary);margin-top:2px;}
-.pnum{font-size:.72rem;font-weight:500;color:#C8102E;margin-top:3px;}
-.pstat{font-size:.72rem;color:var(--color-text-secondary);margin-top:2px;line-height:1.35;}
-.badge-g{display:inline-block;background:#fef3c7;color:#92400e;font-size:11px;padding:.15em .5em;border-radius:4px;margin-top:4px;}
+/* JUGADORES */
+.player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1.25rem;}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.pcard:hover{transform:translateY(-5px);box-shadow:var(--shadow);}
+.pcard-img{height:190px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.pcard-img svg{width:100%;height:100%;}
+.pcard-body{padding:1rem 1.1rem;}
+.pname{font-size:1rem;font-weight:700;color:var(--text);}
+.ppos{font-size:.82rem;color:var(--muted);margin-top:3px;}
+.pnum{font-size:.8rem;font-weight:600;color:var(--red);margin-top:5px;}
+.pstat{font-size:.8rem;color:var(--muted);margin-top:4px;line-height:1.45;}
+.badge-g{display:inline-block;background:#fef3c7;color:#92400e;font-size:.72rem;font-weight:600;padding:.2em .6em;border-radius:5px;margin-top:6px;}
 
-.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;}
-.gc{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;}
-.gc svg{width:100%;height:170px;display:block;}
-.gc-cap{padding:.75rem .9rem;}
-.gc-cap h4{font-size:.85rem;font-weight:500;color:var(--color-text-primary);margin-bottom:.2rem;}
-.gc-cap p{font-size:.77rem;color:var(--color-text-secondary);line-height:1.55;}
+/* GALERÍA */
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.5rem;}
+.gcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.gcard svg{width:100%;height:220px;display:block;}
+.gcaption{padding:1rem 1.2rem;}
+.gcaption h4{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.35rem;}
+.gcaption p{font-size:.88rem;color:var(--muted);line-height:1.65;}
 
-.sstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;margin-bottom:1.25rem;}
-.sbox{background:#002244;border-radius:var(--border-radius-lg);padding:.9rem;text-align:center;}
-.sbox .n{font-size:1.6rem;font-weight:500;color:#C8102E;line-height:1;}
-.sbox .l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#B0B7BC;margin-top:4px;}
-.sbox .s{font-size:.68rem;color:rgba(176,183,188,.75);margin-top:2px;font-family:var(--font-mono);}
+/* ESTADÍSTICA */
+.stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem;}
+.stat-box{background:var(--navy);border-radius:var(--radius);padding:1.2rem;text-align:center;}
+.stat-box .big{font-size:2rem;font-weight:900;color:var(--red);line-height:1;}
+.stat-box .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--silver);margin-top:6px;}
+.stat-box .sub{font-size:.72rem;color:rgba(176,183,188,.8);margin-top:3px;font-family:monospace;}
+.chart-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.25rem;margin-bottom:1.5rem;}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;}
+.chart-card h4{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:1rem;}
 
-.dtbl{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:1rem;}
-.dtbl th{background:#002244;color:#fff;padding:.55rem .75rem;text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;}
-.dtbl td{padding:.5rem .75rem;border-bottom:.5px solid var(--color-border-tertiary);}
-.dtbl tbody tr:hover td{background:var(--color-background-secondary);}
-.tw{color:#166534;font-weight:500;}
+table.dtbl{width:100%;border-collapse:collapse;font-size:.9rem;margin-bottom:1rem;}
+table.dtbl th{background:var(--navy);color:#fff;padding:.7rem 1rem;text-align:left;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;}
+table.dtbl td{padding:.65rem 1rem;border-bottom:1px solid var(--border);}
+table.dtbl tbody tr:hover td{background:#f0f4ff;}
+.tw{color:#166534;font-weight:700;}
 .tl2{color:#991b1b;}
 
-.interp{background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary);border-left:4px solid #002244;border-radius:0 var(--border-radius-lg) var(--border-radius-lg) 0;padding:1.25rem 1.5rem;margin-top:1.25rem;}
-.interp h4{color:var(--color-text-primary);font-size:.95rem;font-weight:500;margin-bottom:.85rem;}
-.interp p{font-size:.85rem;line-height:1.85;color:var(--color-text-primary);margin-bottom:.85rem;}
+.interp{background:#f8faff;border:1px solid #c7d2fe;border-left:5px solid var(--navy);border-radius:0 14px 14px 0;padding:1.75rem 2rem;margin-top:1.5rem;}
+.interp h4{color:var(--navy);font-size:1.1rem;font-weight:800;margin-bottom:1rem;}
+.interp p{font-size:.95rem;line-height:1.9;color:#1e293b;margin-bottom:1rem;}
 .interp p:last-child{margin-bottom:0;}
-.formula{background:#002244;color:#B0B7BC;font-family:var(--font-mono);font-size:.78rem;padding:.55rem .9rem;border-radius:var(--border-radius-md);margin:.35rem 0 .75rem;display:block;line-height:1.6;}
-.mini{width:100%;border-collapse:collapse;font-size:.78rem;margin:.6rem 0 .85rem;}
-.mini th{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);padding:.4rem .65rem;font-weight:500;color:var(--color-text-primary);}
-.mini td{padding:.4rem .65rem;border:.5px solid var(--color-border-tertiary);color:var(--color-text-primary);}
-.hl{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.65rem .9rem;font-size:.82rem;color:var(--color-text-primary);margin-top:.75rem;line-height:1.7;}
+.formula{background:var(--navy);color:#B0B7BC;font-family:'Courier New',monospace;font-size:.88rem;padding:.7rem 1.1rem;border-radius:8px;margin:.4rem 0 .9rem;display:block;line-height:1.65;}
+.mini{width:100%;border-collapse:collapse;font-size:.88rem;margin:.7rem 0;}
+.mini th{background:#e0e7ff;color:var(--navy);padding:.5rem .8rem;font-weight:600;}
+.mini td{padding:.5rem .8rem;border-bottom:1px solid #e0e7ff;color:#1e293b;}
+.hl{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:.8rem 1.1rem;font-size:.92rem;color:#9a3412;margin-top:.9rem;line-height:1.8;}
 
-.qr-wrap{max-width:360px;margin:0 auto;background:#002244;border-radius:var(--border-radius-lg);padding:1.75rem;text-align:center;}
-.qr-wrap p{color:#B0B7BC;font-size:.8rem;margin-bottom:.4rem;}
-.qr-img{width:180px;height:180px;background:#fff;border-radius:8px;margin:1rem auto;padding:8px;display:flex;align-items:center;justify-content:center;}
-.qr-img canvas{width:164px;height:164px;}
-.qr-url{font-size:.78rem;color:#B0B7BC;margin-top:.5rem;word-break:break-all;}
+/* QR */
+.qr-wrap{max-width:440px;margin:0 auto;background:var(--navy);border-radius:var(--radius);padding:2.25rem;text-align:center;}
+.qr-wrap p{color:var(--silver);font-size:.9rem;margin-bottom:.5rem;}
+.qr-box{width:210px;height:210px;background:#fff;border-radius:12px;margin:1.1rem auto;display:flex;align-items:center;justify-content:center;padding:8px;}
+.qr-box img{width:100%;height:100%;image-rendering:pixelated;}
+.qr-url{font-size:.88rem;color:var(--silver);margin-top:.6rem;word-break:break-all;}
 
-.bib{list-style:none;display:flex;flex-direction:column;gap:.75rem;}
-.bib li{font-size:.82rem;line-height:1.75;color:var(--color-text-primary);padding:.75rem .9rem .75rem 1.1rem;background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-left:3px solid #C8102E;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;}
-.bib li strong{color:#002244;}
+/* BIBLIOGRAFÍA */
+.bib{list-style:none;display:flex;flex-direction:column;gap:1rem;}
+.bib li{font-size:.92rem;line-height:1.85;color:#2d3748;padding:.9rem 1.1rem .9rem 1.3rem;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:0 10px 10px 0;}
+.bib li strong{color:var(--navy);}
 
-.footer{background:#002244;color:#B0B7BC;text-align:center;padding:1.5rem;font-size:.75rem;margin-top:1.5rem;}
-.footer strong{color:#C8102E;}
+/* FOOTER */
+.footer{background:var(--navy);color:var(--silver);text-align:center;padding:2.5rem;font-size:.88rem;margin-top:2rem;}
+.footer strong{color:var(--red);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .hero{clip-path:polygon(0 0,100% 0,100% 95%,0 100%);padding:3.5rem 0 3rem;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-emoji{display:none;}
+  .hero-kpis{gap:1.5rem;}
+  .tl-item::before{left:32px;}
+  .tl-left{min-width:64px;}
+}
+@media(max-width:480px){
+  html{font-size:16px;}
+  .stat-strip{grid-template-columns:repeat(2,1fr);}
+  .kpi .big{font-size:2rem;}
+}
 </style>
+</head>
+<body>
 
-<nav>
-  <a href="#intro">Inicio</a>
-  <a href="#historia">Historia</a>
-  <a href="#jugadores">Jugadores</a>
-  <a href="#galeria">Galería</a>
-  <a href="#estadistica">Estadística</a>
-  <a href="#biblio">Bibliografía</a>
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="brand">🏈 New England Patriots</div>
+    <ul class="nav-links">
+      <li><a href="#intro">Inicio</a></li>
+      <li><a href="#historia">Historia</a></li>
+      <li><a href="#jugadores">Jugadores</a></li>
+      <li><a href="#cuerpo-tecnico">Cuerpo Técnico</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#estadistica">Estadística</a></li>
+      <li><a href="#bibliografia">Bibliografía</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="nav-mobile" id="mobileMenu">
+    <a href="#intro"        onclick="closeMenu()">Inicio</a>
+    <a href="#historia"     onclick="closeMenu()">Historia</a>
+    <a href="#jugadores"      onclick="closeMenu()">Jugadores</a>
+    <a href="#cuerpo-tecnico" onclick="closeMenu()">Cuerpo Técnico</a>
+    <a href="#galeria"        onclick="closeMenu()">Galería</a>
+    <a href="#estadistica"  onclick="closeMenu()">Estadística</a>
+    <a href="#bibliografia" onclick="closeMenu()">Bibliografía</a>
+  </nav>
 </nav>
 
-<div class="hero">
-  <div class="hero-inner">
-    <span class="hero-tag">NFL · AFC Este · Fundados en 1960</span>
-    <h1>New England <span>Patriots</span></h1>
-    <p class="hero-desc">Franquicia histórica de la NFL con sede en Foxborough, Massachusetts. Seis veces campeones del Super Bowl y la mayor dinastía del fútbol americano moderno.</p>
-    <div class="kpis">
-      <div class="kpi"><div class="n">6</div><div class="l">Super Bowls</div></div>
-      <div class="kpi"><div class="n">14–3</div><div class="l">Récord 2025</div></div>
-      <div class="kpi"><div class="n">1960</div><div class="l">Fundación</div></div>
-      <div class="kpi"><div class="n">12ª</div><div class="l">Aparición SB</div></div>
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <span class="hero-tag">NFL · AFC Este · Fundados en 1960</span>
+        <h1>New England<em>Patriots</em></h1>
+        <p class="hero-desc">Franquicia histórica de la NFL con sede en Foxborough, Massachusetts. Seis veces campeones del Super Bowl y la mayor dinastía del fútbol americano moderno.</p>
+        <div class="hero-kpis">
+          <div class="kpi"><div class="big">6</div><div class="lbl">Super Bowls</div></div>
+          <div class="kpi"><div class="big">14–3</div><div class="lbl">Récord 2025</div></div>
+          <div class="kpi"><div class="big">1960</div><div class="lbl">Fundación</div></div>
+          <div class="kpi"><div class="big">12ª</div><div class="lbl">Aparición SB</div></div>
+        </div>
+      </div>
+      <div class="hero-emoji" aria-hidden="true">🏈</div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="section" id="intro">
-  <p class="eyebrow">Presentación</p>
-  <h2 class="stitle">Introducción a los <span>New England Patriots</span></h2>
-  <p class="ssub">Datos generales, identidad e importancia histórica de la franquicia</p>
-  <div class="prose">
-    <p>Los <strong>New England Patriots</strong> son un equipo profesional de fútbol americano que compite en la División Este de la Conferencia Americana (AFC) de la NFL. Su sede oficial es el <strong>Gillette Stadium</strong> en Foxborough, Massachusetts, con capacidad para 65,878 espectadores, inaugurado el 9 de agosto de 2002.</p>
-    <p>Fundados en 1960 como los <em>Boston Patriots</em>, adoptaron su nombre actual en 1971. Sus colores oficiales son el <strong>azul marino, el rojo y el plateado</strong>, con el logo "Flying Elvis" adoptado en 1993. La era dorada comenzó en el año 2000 con <strong>Bill Belichick</strong> como head coach y <strong>Tom Brady</strong> como quarterback, ganando seis Super Bowls entre 2001 y 2018.</p>
-    <p>En la temporada 2025, bajo la dirección de <strong>Mike Vrabel</strong> y el quarterback rookie <strong>Drake Maye</strong> (pick #1 del Draft 2024), los Patriots regresaron a la élite con un récord de 14-3, llegando al Super Bowl LX donde cayeron ante los Seattle Seahawks 29-13.</p>
-  </div>
-</div>
-
-<div class="section" id="historia">
-  <p class="eyebrow">Desarrollo histórico</p>
-  <h2 class="stitle">Historia y <span>trayectoria</span></h2>
-  <p class="ssub">Los momentos que definieron a los Patriots desde su fundación</p>
-  <div class="tl">
-    <div class="tli">
-      <div class="tl-side"><div class="tl-y">1960</div><div class="tl-dot"></div></div>
-      <div class="tl-body"><h4>Fundación de los Boston Patriots</h4><p>Fundados el 18 de noviembre de 1959 como miembros fundadores de la AFL. En 1971 se trasladan a Foxborough y adoptan el nombre New England Patriots.</p></div>
-    </div>
-    <div class="tli">
-      <div class="tl-side"><div class="tl-y">1985</div><div class="tl-dot"></div></div>
-      <div class="tl-body"><h4>Primera aparición en el Super Bowl</h4><p>Los Patriots llegan al Super Bowl XX enfrentando a los Chicago Bears, perdiendo 46-10. Primer indicio de que la franquicia podía competir al más alto nivel.</p></div>
-    </div>
-    <div class="tli">
-      <div class="tl-side"><div class="tl-y">2001</div><div class="tl-dot"></div></div>
-      <div class="tl-body"><h4>Inicio de la dinastía Brady-Belichick</h4><p>Tom Brady, drafteado en la ronda 6 como pick #199, guía a los Patriots al Super Bowl XXXVI, ganando 20-17 a los Rams en los últimos segundos. Inicia la mayor dinastía en la historia de la NFL.</p></div>
-    </div>
-    <div class="tli">
-      <div class="tl-side"><div class="tl-y">2007</div><div class="tl-dot"></div></div>
-      <div class="tl-body"><h4>Temporada perfecta 16-0</h4><p>Primera temporada perfecta de 16 juegos en la NFL. Brady lanza 50 TD (récord) y Moss anota 23 TD (récord). Pierden el Super Bowl XLII ante los Giants 17-14.</p></div>
-    </div>
-    <div class="tli">
-      <div class="tl-side"><div class="tl-y">2017</div><div class="tl-dot"></div></div>
-      <div class="tl-body"><h4>La remontada histórica del Super Bowl LI</h4><p>Remontan 28-3 en el tercer cuarto para vencer a Atlanta 34-28 en tiempo extra. Brady termina con 466 yardas de pase, récord del Super Bowl.</p></div>
-    </div>
-    <div class="tli">
-      <div class="tl-side"><div class="tl-y">2020</div><div class="tl-dot"></div></div>
-      <div class="tl-body"><h4>Fin de la era Brady — Reconstrucción</h4><p>Brady se va a Tampa Bay. Los Patriots terminan 7-9, primera temporada perdedora desde 2000. Cuatro años de reconstrucción: 7-9, 10-7, 8-9, 4-13 y 4-13.</p></div>
-    </div>
-    <div class="tli">
-      <div class="tl-side"><div class="tl-y">2025</div><div class="tl-dot"></div></div>
-      <div class="tl-body"><h4>Regreso a la élite — Super Bowl LX</h4><p>Con Drake Maye y Mike Vrabel logran récord de 14-3, ganan el AFC Este y llegan al Super Bowl LX. Derrota ante Seattle 29-13. Es la 12ª aparición en el Super Bowl, récord absoluto de la NFL.</p></div>
+<section class="section" id="intro">
+  <div class="container">
+    <p class="sec-eyebrow">Presentación del equipo</p>
+    <h2 class="sec-title">Introducción a los <span>New England Patriots</span></h2>
+    <p class="sec-sub">Datos generales, identidad e importancia histórica de la franquicia</p>
+    <div class="prose">
+      <p>Los <strong>New England Patriots</strong> son un equipo profesional de fútbol americano que compite en la División Este de la Conferencia Americana (AFC) de la NFL. Su sede oficial es el <strong>Gillette Stadium</strong> en Foxborough, Massachusetts, con capacidad para 65,878 espectadores, inaugurado el 9 de agosto de 2002.</p>
+      <p>Fundados en 1960 como los <em>Boston Patriots</em>, adoptaron su nombre actual en 1971. Sus colores oficiales son el <strong>azul marino, el rojo y el plateado</strong>, con el logo "Flying Elvis" adoptado en 1993. La era dorada comenzó en el año 2000 con <strong>Bill Belichick</strong> como head coach y <strong>Tom Brady</strong> como quarterback, ganando seis Super Bowls entre 2001 y 2018.</p>
+      <p>En la temporada 2025, bajo la dirección de <strong>Mike Vrabel</strong> y el quarterback <strong>Drake Maye</strong> (pick #1 del Draft 2024), los Patriots regresaron a la élite con un récord de 14-3, llegando al Super Bowl LX donde cayeron ante los Seattle Seahawks 29-13.</p>
     </div>
   </div>
-</div>
+</section>
 
-<div class="section" id="jugadores">
-  <p class="eyebrow">Plantel y leyendas</p>
-  <h2 class="stitle">Jugadores <span>destacados</span></h2>
-  <p class="ssub">Figuras clave de la temporada 2025 y leyendas históricas de la franquicia</p>
-  <div class="pgrid">
-
-    <div class="pcard">
-      <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg">
-        <rect width="160" height="130" fill="#002244"/>
-        <circle cx="80" cy="48" r="30" fill="#001a38" stroke="#C8102E" stroke-width="2"/>
-        <text x="80" y="56" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#C8102E">DM</text>
-        <rect x="55" y="88" width="50" height="20" rx="4" fill="#C8102E"/>
-        <text x="80" y="103" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#fff">#10 QB</text>
-        <text x="80" y="122" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#B0B7BC">Drake Maye</text>
-      </svg>
-      <div class="pcard-body">
-        <div class="pname">Drake Maye</div>
-        <div class="ppos">Quarterback</div>
-        <div class="pnum">#10 · Activo 2025</div>
-        <div class="pstat">4,459 yds · 31 TD · Temporada 2025</div>
+<section class="section" id="historia">
+  <div class="container">
+    <p class="sec-eyebrow">Desarrollo histórico</p>
+    <h2 class="sec-title">Historia y <span>trayectoria</span></h2>
+    <p class="sec-sub">Los momentos que definieron a los Patriots desde su fundación hasta hoy</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-year">1960</div><div class="tl-dot"></div></div>
+        <div class="tl-content"><h4>Fundación de los Boston Patriots</h4><p>Fundados el 18 de noviembre de 1959 como miembros de la AFL. En 1971 se trasladan a Foxborough y adoptan el nombre New England Patriots para representar a toda la región.</p></div>
       </div>
-    </div>
-
-    <div class="pcard">
-      <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg">
-        <rect width="160" height="130" fill="#002244"/>
-        <circle cx="80" cy="48" r="30" fill="#001a38" stroke="#C8102E" stroke-width="2"/>
-        <text x="80" y="56" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#C8102E">SD</text>
-        <rect x="55" y="88" width="50" height="20" rx="4" fill="#C8102E"/>
-        <text x="80" y="103" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#fff">#14 WR</text>
-        <text x="80" y="122" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#B0B7BC">Stefon Diggs</text>
-      </svg>
-      <div class="pcard-body">
-        <div class="pname">Stefon Diggs</div>
-        <div class="ppos">Wide Receiver</div>
-        <div class="pnum">#14 · Activo 2025</div>
-        <div class="pstat">85 rec · 1,013 yds · 4 TD</div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-year">1985</div><div class="tl-dot"></div></div>
+        <div class="tl-content"><h4>Primera aparición en el Super Bowl</h4><p>Los Patriots llegan al Super Bowl XX enfrentando a los Chicago Bears, perdiendo 46-10. Primer indicio de que la franquicia podía competir al más alto nivel.</p></div>
       </div>
-    </div>
-
-    <div class="pcard">
-      <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg">
-        <rect width="160" height="130" fill="#002244"/>
-        <circle cx="80" cy="48" r="30" fill="#001a38" stroke="#C8102E" stroke-width="2"/>
-        <text x="80" y="56" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#C8102E">TH</text>
-        <rect x="55" y="88" width="50" height="20" rx="4" fill="#C8102E"/>
-        <text x="80" y="103" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#fff">#32 RB</text>
-        <text x="80" y="122" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#B0B7BC">T. Henderson</text>
-      </svg>
-      <div class="pcard-body">
-        <div class="pname">TreVeyon Henderson</div>
-        <div class="ppos">Running Back</div>
-        <div class="pnum">#32 · Activo 2025</div>
-        <div class="pstat">911 yds corridas · 2025</div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-year">2001</div><div class="tl-dot"></div></div>
+        <div class="tl-content"><h4>Inicio de la dinastía Brady-Belichick</h4><p>Tom Brady, drafteado en la ronda 6 como pick #199, guía a los Patriots al Super Bowl XXXVI ganando 20-17 a los Rams en los últimos segundos. Inicia la mayor dinastía en la historia de la NFL.</p></div>
       </div>
-    </div>
-
-    <div class="pcard">
-      <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg">
-        <rect width="160" height="130" fill="#1a0800"/>
-        <circle cx="80" cy="48" r="30" fill="#0d0400" stroke="#ffd700" stroke-width="2"/>
-        <text x="80" y="56" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#ffd700">TB</text>
-        <rect x="45" y="88" width="70" height="20" rx="4" fill="#ffd700"/>
-        <text x="80" y="103" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#1a0800">#12 G.O.A.T</text>
-        <text x="80" y="122" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#c8a060">Tom Brady</text>
-      </svg>
-      <div class="pcard-body">
-        <div class="pname">Tom Brady</div>
-        <div class="ppos">Quarterback · Leyenda</div>
-        <div class="pnum">#12 · Retirado 2023</div>
-        <div class="pstat">89,214 yds · 649 TD · 7 SB</div>
-        <span class="badge-g">G.O.A.T — El mejor de todos</span>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-year">2007</div><div class="tl-dot"></div></div>
+        <div class="tl-content"><h4>Temporada perfecta 16-0</h4><p>Primera temporada perfecta en la historia de la NFL moderna. Brady lanza 50 TD (récord) y Moss anota 23 TD (récord). Pierden el Super Bowl XLII ante los Giants 17-14.</p></div>
       </div>
-    </div>
-
-    <div class="pcard">
-      <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg">
-        <rect width="160" height="130" fill="#1a0800"/>
-        <circle cx="80" cy="48" r="30" fill="#0d0400" stroke="#ffd700" stroke-width="2"/>
-        <text x="80" y="56" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#ffd700">RG</text>
-        <rect x="45" y="88" width="70" height="20" rx="4" fill="#ffd700"/>
-        <text x="80" y="103" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#1a0800">#87 TE</text>
-        <text x="80" y="122" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#c8a060">Rob Gronkowski</text>
-      </svg>
-      <div class="pcard-body">
-        <div class="pname">Rob Gronkowski</div>
-        <div class="ppos">Tight End · Leyenda</div>
-        <div class="pnum">#87 · Retirado 2022</div>
-        <div class="pstat">521 rec · 7,861 yds · 79 TD</div>
-        <span class="badge-g">Hall of Fame 2026</span>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-year">2017</div><div class="tl-dot"></div></div>
+        <div class="tl-content"><h4>La remontada histórica del Super Bowl LI</h4><p>Remontan 28-3 en el tercer cuarto para vencer a Atlanta 34-28 en tiempo extra. Brady termina con 466 yardas de pase, récord del Super Bowl.</p></div>
       </div>
-    </div>
-
-    <div class="pcard">
-      <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg">
-        <rect width="160" height="130" fill="#1a0800"/>
-        <circle cx="80" cy="48" r="30" fill="#0d0400" stroke="#ffd700" stroke-width="2"/>
-        <text x="80" y="56" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#ffd700">RM</text>
-        <rect x="45" y="88" width="70" height="20" rx="4" fill="#ffd700"/>
-        <text x="80" y="103" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#1a0800">#81 WR</text>
-        <text x="80" y="122" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#c8a060">Randy Moss</text>
-      </svg>
-      <div class="pcard-body">
-        <div class="pname">Randy Moss</div>
-        <div class="ppos">Wide Receiver · Leyenda</div>
-        <div class="pnum">#81 · Retirado 2013</div>
-        <div class="pstat">23 TD en 2007 — Récord NFL</div>
-        <span class="badge-g">Hall of Fame 2018</span>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-year">2020</div><div class="tl-dot"></div></div>
+        <div class="tl-content"><h4>Fin de la era Brady — Reconstrucción</h4><p>Brady se va a Tampa Bay. Los Patriots terminan 7-9. Cuatro años de reconstrucción: 7-9, 10-7, 8-9, 4-13 y 4-13 antes del regreso a la élite.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-year">2025</div><div class="tl-dot"></div></div>
+        <div class="tl-content"><h4>Regreso a la élite — Super Bowl LX</h4><p>Con Drake Maye como quarterback y Mike Vrabel como head coach, los Patriots logran un récord de 14-3, ganan el AFC Este y llegan al Super Bowl LX, perdiendo ante Seattle 29-13. Es la 12ª aparición en el Super Bowl, récord absoluto de la NFL.</p></div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="section" id="galeria">
-  <p class="eyebrow">Evidencias visuales</p>
-  <h2 class="stitle">Galería <span>fotográfica</span></h2>
-  <p class="ssub">Momentos e íconos de los New England Patriots — ilustraciones SVG generadas para esta página</p>
-  <div class="gal">
-
-    <div class="gc">
-      <svg viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg">
-        <rect width="280" height="170" fill="#0a1628"/>
-        <rect x="20" y="90" width="240" height="60" rx="4" fill="#002244"/>
-        <rect x="40" y="75" width="200" height="20" rx="3" fill="#001a38"/>
-        <rect x="60" y="55" width="160" height="25" rx="3" fill="#001a38"/>
-        <rect x="100" y="35" width="80" height="25" rx="3" fill="#001a38"/>
-        <rect x="25" y="88" width="10" height="62" fill="#C8102E"/>
-        <rect x="245" y="88" width="10" height="62" fill="#C8102E"/>
-        <rect x="20" y="148" width="240" height="5" fill="#C8102E"/>
-        <rect x="0" y="153" width="280" height="17" fill="#002244"/>
-        <text x="140" y="165" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#B0B7BC">GILLETTE STADIUM · FOXBOROUGH, MA</text>
-        <circle cx="140" cy="110" r="15" fill="none" stroke="#C8102E" stroke-width="1.5"/>
-        <text x="140" y="115" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="700" fill="#C8102E">NE</text>
-      </svg>
-      <div class="gc-cap"><h4>Gillette Stadium — Foxborough, MA</h4><p>Estadio oficial inaugurado el 9 de agosto de 2002. Capacidad de 65,878 espectadores. Construido con una inversión de 325 millones de dólares, propiedad de Robert Kraft.</p></div>
-    </div>
-
-    <div class="gc">
-      <svg viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg">
-        <rect width="280" height="170" fill="#001a38"/>
-        <g transform="translate(30,20)">
-          <polygon points="110,0 140,80 80,50 140,50 80,80" fill="#ffd700" opacity=".9"/>
-          <rect x="95" y="82" width="30" height="40" rx="3" fill="#c8a020"/>
-          <rect x="85" y="118" width="50" height="8" rx="2" fill="#a07010"/>
-        </g>
-        <text x="140" y="148" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#ffd700">6 SUPER BOWLS</text>
-        <text x="140" y="163" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#B0B7BC">XXXVI · XXXVIII · XXXIX · XLIX · LI · LIII</text>
-      </svg>
-      <div class="gc-cap"><h4>Seis Trofeos Vince Lombardi</h4><p>Los Patriots ganaron el Super Bowl en 2002, 2004, 2005, 2015, 2017 y 2019. Los seis títulos fueron con Belichick como head coach y Brady como quarterback.</p></div>
-    </div>
-
-    <div class="gc">
-      <svg viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg">
-        <rect width="280" height="170" fill="#0d0400"/>
-        <circle cx="140" cy="70" r="45" fill="#1a0800" stroke="#ffd700" stroke-width="2"/>
-        <text x="140" y="62" text-anchor="middle" font-family="sans-serif" font-size="28" font-weight="700" fill="#ffd700">TB</text>
-        <text x="140" y="82" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#c8a060">#12 QB</text>
-        <rect x="60" y="128" width="160" height="22" rx="4" fill="#ffd700"/>
-        <text x="140" y="144" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#1a0800">TOM BRADY — G.O.A.T.</text>
-        <text x="140" y="166" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#c8a060">89,214 yds · 649 TD · 7 Super Bowls</text>
-      </svg>
-      <div class="gc-cap"><h4>Tom Brady — El G.O.A.T.</h4><p>Líder histórico de la NFL en yardas (89,214) y touchdowns (649). Drafteado como pick #199 en la ronda 6 del año 2000, se convirtió en el mejor quarterback de todos los tiempos.</p></div>
-    </div>
-
-    <div class="gc">
-      <svg viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg">
-        <rect width="280" height="170" fill="#001a38"/>
-        <circle cx="140" cy="68" r="42" fill="#002244" stroke="#C8102E" stroke-width="2"/>
-        <text x="140" y="60" text-anchor="middle" font-family="sans-serif" font-size="26" font-weight="700" fill="#C8102E">DM</text>
-        <text x="140" y="80" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#B0B7BC">#10 QB · 2025</text>
-        <rect x="65" y="126" width="150" height="20" rx="4" fill="#C8102E"/>
-        <text x="140" y="141" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#fff">DRAKE MAYE · NUEVA ERA</text>
-        <text x="140" y="162" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#B0B7BC">4,459 yds · 31 TD · Super Bowl LX</text>
-      </svg>
-      <div class="gc-cap"><h4>Drake Maye — La nueva era (2025)</h4><p>Pick #1 del Draft 2024 con 22 años. Lideró a los Patriots con 4,459 yardas y 31 touchdowns en 2025, llevándolos al Super Bowl LX.</p></div>
-    </div>
-
-    <div class="gc">
-      <svg viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg">
-        <rect width="280" height="170" fill="#0a0a0a"/>
-        <rect x="30" y="30" width="100" height="110" rx="4" fill="#002244" stroke="#B0B7BC" stroke-width="1"/>
-        <text x="80" y="80" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="#fff">28-3</text>
-        <text x="80" y="100" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#C8102E">FALCONS</text>
-        <rect x="150" y="30" width="100" height="110" rx="4" fill="#C8102E" stroke="#fff" stroke-width="1"/>
-        <text x="200" y="80" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="#fff">34-28</text>
-        <text x="200" y="100" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#fff">PATRIOTS OT</text>
-        <text x="140" y="158" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#888">SUPER BOWL LI · 5 FEB 2017</text>
-      </svg>
-      <div class="gc-cap"><h4>Super Bowl LI — Remontada histórica</h4><p>El 5 de febrero de 2017 los Patriots remontaron 28-3 para ganar 34-28 en tiempo extra ante Atlanta. Brady terminó con 466 yardas, récord del Super Bowl.</p></div>
-    </div>
-
-    <div class="gc">
-      <svg viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg">
-        <rect width="280" height="170" fill="#001a38"/>
-        <rect x="50" y="25" width="180" height="90" rx="4" fill="#002244"/>
-        <text x="140" y="65" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="#fff">BILL BELICHICK</text>
-        <text x="140" y="85" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#B0B7BC">Head Coach 2000–2023</text>
-        <text x="140" y="100" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#C8102E">266-121 en temporada regular</text>
-        <rect x="30" y="130" width="220" height="22" rx="4" fill="#C8102E"/>
-        <text x="140" y="146" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#fff">6 SUPER BOWLS COMO HEAD COACH</text>
-        <text x="140" y="163" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#B0B7BC">Récord absoluto en la historia de la NFL</text>
-      </svg>
-      <div class="gc-cap"><h4>Bill Belichick — El mejor entrenador</h4><p>Head coach de 2000 a 2023 con récord de 266-121. Ganó 6 Super Bowls, más que cualquier otro entrenador en la historia de la NFL.</p></div>
-    </div>
-
-  </div>
-</div>
-
-<div class="section" id="estadistica">
-  <p class="eyebrow">Análisis estadístico</p>
-  <h2 class="stitle">Estadística <span>real aplicada</span></h2>
-  <p class="ssub">Medidas de tendencia central y dispersión — victorias temporada regular 2016–2025. Fuente: footballdb.com · pro-football-reference.com</p>
-
-  <div class="sstrip">
-    <div class="sbox"><div class="n">9.7</div><div class="l">Media (x̄)</div><div class="s">97 / 10</div></div>
-    <div class="sbox"><div class="n">10.5</div><div class="l">Mediana (Me)</div><div class="s">(11+10)/2</div></div>
-    <div class="sbox"><div class="n">4 y 14</div><div class="l">Moda (Mo)</div><div class="s">Bimodal</div></div>
-    <div class="sbox"><div class="n">3.59</div><div class="l">Desv. Estándar</div><div class="s">√13.01</div></div>
-    <div class="sbox"><div class="n">13.01</div><div class="l">Varianza (s²)</div><div class="s">130.1/10</div></div>
-    <div class="sbox"><div class="n">10</div><div class="l">Rango (R)</div><div class="s">14 − 4</div></div>
-  </div>
-
-  <div style="overflow-x:auto;margin-bottom:1rem;">
-    <table class="dtbl">
-      <thead><tr><th>Temporada</th><th>Victorias (xᵢ)</th><th>Derrotas</th><th>xᵢ − x̄</th><th>(xᵢ − x̄)²</th><th>Resultado final</th></tr></thead>
-      <tbody>
-        <tr><td>2016</td><td class="tw">14</td><td>2</td><td>+4.3</td><td>18.49</td><td>Campeones Super Bowl LI</td></tr>
-        <tr><td>2017</td><td class="tw">13</td><td>3</td><td>+3.3</td><td>10.89</td><td>Finalistas Super Bowl LII</td></tr>
-        <tr><td>2018</td><td class="tw">11</td><td>5</td><td>+1.3</td><td>1.69</td><td>Campeones Super Bowl LIII</td></tr>
-        <tr><td>2019</td><td class="tw">12</td><td>4</td><td>+2.3</td><td>5.29</td><td>Eliminados en Wild Card</td></tr>
-        <tr><td>2020</td><td class="tl2">7</td><td>9</td><td>−2.7</td><td>7.29</td><td>Sin playoffs — Era post-Brady</td></tr>
-        <tr><td>2021</td><td class="tw">10</td><td>7</td><td>+0.3</td><td>0.09</td><td>Eliminados en Wild Card</td></tr>
-        <tr><td>2022</td><td class="tl2">8</td><td>9</td><td>−1.7</td><td>2.89</td><td>Sin playoffs</td></tr>
-        <tr><td>2023</td><td class="tl2">4</td><td>13</td><td>−5.7</td><td>32.49</td><td>Peor récord desde 2000</td></tr>
-        <tr><td>2024</td><td class="tl2">4</td><td>13</td><td>−5.7</td><td>32.49</td><td>Draft pick #1 → Drake Maye</td></tr>
-        <tr><td>2025</td><td class="tw">14</td><td>3</td><td>+4.3</td><td>18.49</td><td>Finalistas Super Bowl LX</td></tr>
-        <tr style="background:var(--color-background-secondary);font-weight:500;"><td>TOTALES</td><td>97</td><td>68</td><td>0</td><td>130.1</td><td>s² = 130.1/10 = 13.01</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div style="margin-bottom:1.25rem;"><canvas id="chartV" height="220"></canvas></div>
-
-  <div class="interp">
-    <h4>Interpretación estadística — Datos reales verificados 2016–2025</h4>
-
-    <p>El conjunto de datos analizado comprende <strong>n = 10 observaciones</strong> correspondientes al número de victorias en temporada regular de los New England Patriots durante el período 2016–2025, obtenidas de fuentes primarias verificables. La variable analizada es de tipo <strong>cuantitativa discreta</strong>, ya que toma exclusivamente valores enteros no negativos en un rango definido (0 a 17 victorias posibles en la NFL).</p>
-
-    <p><strong>Media aritmética (x̄):</strong> Se obtiene sumando todos los valores y dividiéndolos entre el número total de observaciones. Es la medida de tendencia central más utilizada y sensible a valores extremos:</p>
-    <span class="formula">x̄ = Σxᵢ / n = (14+13+11+12+7+10+8+4+4+14) / 10 = 97 / 10 = 9.7 victorias</span>
-
-    <p><strong>Mediana (Me):</strong> Es el valor central cuando los datos se ordenan de menor a mayor. Para n par, se promedia entre los dos valores centrales (posiciones n/2 y n/2+1). Ordenando el conjunto: {4, 4, 7, 8, <u>10, 11</u>, 12, 13, 14, 14}, los valores centrales son el 5° (10) y el 6° (11):</p>
-    <span class="formula">Me = (x₅ + x₆) / 2 = (10 + 11) / 2 = 21 / 2 = 10.5 victorias</span>
-
-    <p>El hecho de que Me (10.5) &gt; x̄ (9.7) indica una <strong>asimetría negativa leve</strong> (cola hacia la izquierda): las dos temporadas de solo 4 victorias (2023 y 2024) halan la media hacia abajo sin desplazar la mediana en igual magnitud. La <strong>moda es bimodal (Mo = 4 y 14)</strong>, ambos valores se repiten exactamente dos veces, evidenciando que el equipo experimentó de forma recurrente tanto su mejor como su peor rendimiento de la era moderna.</p>
-
-    <p><strong>Varianza (s²) y Desviación Estándar (s):</strong> Miden la dispersión de los datos respecto a la media. La varianza promedia los cuadrados de las desviaciones individuales:</p>
-    <span class="formula">s² = Σ(xᵢ − x̄)² / n = 130.1 / 10 = 13.01</span>
-    <span class="formula">s = √s² = √13.01 ≈ 3.59 victorias</span>
-
-    <p>Una desviación estándar de <strong>3.59 victorias es elevada</strong> en el contexto de la NFL, donde el máximo posible es 17 juegos. Significa que, en promedio, cada temporada se desvió casi 4 victorias del promedio histórico del período. Esto confirma estadísticamente que los Patriots no tuvieron una trayectoria estable: alternaron entre ciclos de dominio absoluto y reconstrucción profunda.</p>
-
-    <table class="mini">
-      <thead><tr><th>Indicador</th><th>Valor</th><th>Interpretación en contexto NFL</th></tr></thead>
-      <tbody>
-        <tr><td>Media (x̄)</td><td>9.7 vic.</td><td>Por encima del umbral histórico de playoffs (~9 victorias promedio)</td></tr>
-        <tr><td>Mediana (Me)</td><td>10.5 vic.</td><td>El 50% de las temporadas tuvieron 11 o más victorias</td></tr>
-        <tr><td>Moda (Mo)</td><td>4 y 14</td><td>Bimodal — ciclos claros de élite y reconstrucción</td></tr>
-        <tr><td>Desv. Estándar (s)</td><td>3.59 vic.</td><td>Alta variabilidad — sin estabilidad en el rendimiento</td></tr>
-        <tr><td>Varianza (s²)</td><td>13.01</td><td>Dispersión cuadrática total del conjunto de datos</td></tr>
-        <tr><td>Rango (R)</td><td>10 vic.</td><td>Diferencia entre el mejor (14) y peor (4) año del período</td></tr>
-      </tbody>
-    </table>
-
-    <div class="hl">
-      <strong>Coeficiente de variación (CV):</strong> CV = (s / x̄) × 100 = (3.59 / 9.7) × 100 = <strong>37.0%</strong>. Un CV mayor al 30% indica alta variabilidad relativa, confirmando que las temporadas del período son heterogéneas entre sí. Sin embargo, el 60% de las temporadas (6 de 10) superaron las 10 victorias, y el promedio de 9.7 victorias está por encima del umbral histórico de clasificación a playoffs en la NFL, evidencia estadística de que los Patriots siguen siendo una franquicia de élite a largo plazo, a pesar de los ciclos de transición.
+<section class="section" id="jugadores">
+  <div class="container">
+    <p class="sec-eyebrow">Plantel y leyendas</p>
+    <h2 class="sec-title">Jugadores <span>destacados</span></h2>
+    <p class="sec-sub">Figuras clave de la temporada 2025 y leyendas históricas de la franquicia</p>
+    <div class="player-grid">
+      <div class="pcard">
+        <div class="pcard-img">
+          <svg viewBox="0 0 190 190" xmlns="http://www.w3.org/2000/svg">
+            <rect width="190" height="190" fill="#002244"/>
+            <circle cx="95" cy="75" r="48" fill="#001530" stroke="#C8102E" stroke-width="3"/>
+            <text x="95" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="32" font-weight="900" fill="#C8102E">DM</text>
+            <rect x="55" y="138" width="80" height="28" rx="6" fill="#C8102E"/>
+            <text x="95" y="158" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#fff">#10 QB</text>
+            <text x="95" y="182" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#B0B7BC">DRAKE MAYE</text>
+          </svg>
+        </div>
+        <div class="pcard-body">
+          <div class="pname">Drake Maye</div>
+          <div class="ppos">Quarterback</div>
+          <div class="pnum">#10 · Activo 2025</div>
+          <div class="pstat">4,459 yds · 31 TD · Temporada 2025</div>
+        </div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-img">
+          <svg viewBox="0 0 190 190" xmlns="http://www.w3.org/2000/svg">
+            <rect width="190" height="190" fill="#002244"/>
+            <circle cx="95" cy="75" r="48" fill="#001530" stroke="#C8102E" stroke-width="3"/>
+            <text x="95" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="32" font-weight="900" fill="#C8102E">SD</text>
+            <rect x="55" y="138" width="80" height="28" rx="6" fill="#C8102E"/>
+            <text x="95" y="158" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#fff">#14 WR</text>
+            <text x="95" y="182" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#B0B7BC">STEFON DIGGS</text>
+          </svg>
+        </div>
+        <div class="pcard-body">
+          <div class="pname">Stefon Diggs</div>
+          <div class="ppos">Wide Receiver</div>
+          <div class="pnum">#14 · Activo 2025</div>
+          <div class="pstat">85 rec · 1,013 yds · 4 TD</div>
+        </div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-img">
+          <svg viewBox="0 0 190 190" xmlns="http://www.w3.org/2000/svg">
+            <rect width="190" height="190" fill="#002244"/>
+            <circle cx="95" cy="75" r="48" fill="#001530" stroke="#C8102E" stroke-width="3"/>
+            <text x="95" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="32" font-weight="900" fill="#C8102E">TH</text>
+            <rect x="55" y="138" width="80" height="28" rx="6" fill="#C8102E"/>
+            <text x="95" y="158" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#fff">#32 RB</text>
+            <text x="95" y="182" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#B0B7BC">T. HENDERSON</text>
+          </svg>
+        </div>
+        <div class="pcard-body">
+          <div class="pname">TreVeyon Henderson</div>
+          <div class="ppos">Running Back</div>
+          <div class="pnum">#32 · Activo 2025</div>
+          <div class="pstat">911 yds corridas · 2025</div>
+        </div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-img">
+          <svg viewBox="0 0 190 190" xmlns="http://www.w3.org/2000/svg">
+            <rect width="190" height="190" fill="#1a0800"/>
+            <circle cx="95" cy="75" r="48" fill="#0d0400" stroke="#ffd700" stroke-width="3"/>
+            <text x="95" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="32" font-weight="900" fill="#ffd700">TB</text>
+            <rect x="40" y="138" width="110" height="28" rx="6" fill="#ffd700"/>
+            <text x="95" y="158" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#1a0800">#12 G.O.A.T</text>
+            <text x="95" y="182" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#c8a060">TOM BRADY</text>
+          </svg>
+        </div>
+        <div class="pcard-body">
+          <div class="pname">Tom Brady</div>
+          <div class="ppos">Quarterback · Leyenda</div>
+          <div class="pnum">#12 · Retirado 2023</div>
+          <div class="pstat">89,214 yds · 649 TD · 7 SB</div>
+          <span class="badge-g">⭐ G.O.A.T — El mejor de todos</span>
+        </div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-img">
+          <svg viewBox="0 0 190 190" xmlns="http://www.w3.org/2000/svg">
+            <rect width="190" height="190" fill="#1a0800"/>
+            <circle cx="95" cy="75" r="48" fill="#0d0400" stroke="#ffd700" stroke-width="3"/>
+            <text x="95" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="32" font-weight="900" fill="#ffd700">RG</text>
+            <rect x="40" y="138" width="110" height="28" rx="6" fill="#ffd700"/>
+            <text x="95" y="158" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#1a0800">#87 TE Leyenda</text>
+            <text x="95" y="182" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#c8a060">GRONKOWSKI</text>
+          </svg>
+        </div>
+        <div class="pcard-body">
+          <div class="pname">Rob Gronkowski</div>
+          <div class="ppos">Tight End · Leyenda</div>
+          <div class="pnum">#87 · Retirado 2022</div>
+          <div class="pstat">521 rec · 7,861 yds · 79 TD</div>
+          <span class="badge-g">🏛 Hall of Fame 2026</span>
+        </div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-img">
+          <svg viewBox="0 0 190 190" xmlns="http://www.w3.org/2000/svg">
+            <rect width="190" height="190" fill="#1a0800"/>
+            <circle cx="95" cy="75" r="48" fill="#0d0400" stroke="#ffd700" stroke-width="3"/>
+            <text x="95" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="32" font-weight="900" fill="#ffd700">RM</text>
+            <rect x="40" y="138" width="110" height="28" rx="6" fill="#ffd700"/>
+            <text x="95" y="158" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#1a0800">#81 WR Leyenda</text>
+            <text x="95" y="182" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#c8a060">RANDY MOSS</text>
+          </svg>
+        </div>
+        <div class="pcard-body">
+          <div class="pname">Randy Moss</div>
+          <div class="ppos">Wide Receiver · Leyenda</div>
+          <div class="pnum">#81 · Retirado 2013</div>
+          <div class="pstat">23 TD en 2007 — Récord NFL</div>
+          <span class="badge-g">🏛 Hall of Fame 2018</span>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="section" id="cierre">
-  <p class="eyebrow">Conclusión</p>
-  <h2 class="stitle">Reflexión <span>final</span></h2>
-  <p class="ssub">Síntesis del tema y aprendizajes obtenidos</p>
-  <div class="prose">
-    <p>Los <strong>New England Patriots</strong> son un caso de estudio único en el deporte profesional. La dinastía Brady-Belichick (2001-2019) demostró que el éxito sostenido requiere más que talento individual: exige disciplina organizacional, liderazgo constante y capacidad de adaptación. Con seis Super Bowls en 18 años y récord de 266-121, los Patriots redefinieron lo que significa ser una franquicia de élite en la NFL.</p>
-    <p>El análisis estadístico confirma con datos reales verificados: en 2016-2025, los Patriots promediaron 9.7 victorias por temporada con una desviación estándar de 3.59 y un coeficiente de variación del 37%, reflejo de ciclos bien diferenciados entre dominio y reconstrucción. El 60% de las temporadas superaron las 10 victorias, estadística propia de las mejores franquicias de la liga.</p>
-    <p>La temporada 2025 con Drake Maye y Mike Vrabel, coronada con 14 victorias y una 12ª aparición en el Super Bowl, confirma que los Patriots no son solo historia: son una organización que sabe reinventarse y volver a la cima.</p>
+<section class="section" id="cuerpo-tecnico">
+  <div class="container">
+    <p class="sec-eyebrow">Cuerpo técnico 2025</p>
+    <h2 class="sec-title">Equipo de <span>entrenadores</span></h2>
+    <p class="sec-sub">El equipo técnico liderado por Mike Vrabel reúne figuras de gran experiencia en la NFL. Fuente: patriots.com</p>
+
+    <div style="background:var(--navy);border-radius:var(--radius);padding:2rem;margin-bottom:2rem;">
+      <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+        <div style="width:90px;height:90px;border-radius:50%;background:#001530;border:4px solid var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span style="font-size:2rem;font-weight:900;color:var(--red);">MV</span>
+        </div>
+        <div>
+          <p style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--silver);margin-bottom:.3rem;">Head Coach</p>
+          <h3 style="font-size:1.8rem;font-weight:900;color:#fff;line-height:1.1;">Mike Vrabel</h3>
+          <p style="color:var(--silver);font-size:.95rem;margin-top:.4rem;line-height:1.65;">Exjugador de la NFL con 14 temporadas activas. Como head coach de los Tennessee Titans (2018–2023) logró récord de 54-45 y cuatro apariciones en playoffs. Llegó a los Patriots en 2024 con la misión de reconstruir la franquicia, logrando en su primera temporada un récord de 14-3 y la clasificación al Super Bowl LX.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;">
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;border-left:5px solid var(--red);">
+        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:.4rem;">Coordinador Ofensivo</p>
+        <h4 style="font-size:1.15rem;font-weight:800;color:var(--navy);margin-bottom:.5rem;">Josh McDaniels</h4>
+        <p style="font-size:.88rem;color:var(--muted);line-height:1.7;">Regresa a New England tras su paso como head coach de los Las Vegas Raiders. Fue coordinador ofensivo de los Patriots durante la era Brady-Belichick, diseñando la ofensiva que ganó cuatro de los seis Super Bowls del equipo. Su sistema de juego es reconocido por maximizar las capacidades del quarterback.</p>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;border-left:5px solid var(--navy);">
+        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--navy);margin-bottom:.4rem;">Coordinador Defensivo</p>
+        <h4 style="font-size:1.15rem;font-weight:800;color:var(--navy);margin-bottom:.5rem;">Terrell Williams</h4>
+        <p style="font-size:.88rem;color:var(--muted);line-height:1.7;">Veterano de la NFL como entrenador defensivo con experiencia en múltiples franquicias. Su esquema defensivo se caracteriza por la versatilidad y el uso intensivo de datos analíticos para anticipar las tendencias ofensivas de los rivales, adaptando coberturas y presiones según el análisis estadístico del oponente.</p>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;border-left:5px solid var(--red);">
+        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:.4rem;">Coordinador de Juego Aéreo / Alas Cerradas</p>
+        <h4 style="font-size:1.15rem;font-weight:800;color:var(--navy);margin-bottom:.5rem;">Thomas Brown</h4>
+        <p style="font-size:.88rem;color:var(--muted);line-height:1.7;">Especialista en el desarrollo del juego de pase y el aprovechamiento de los tight ends como armas ofensivas. Su rol es fundamental para maximizar el rendimiento de Drake Maye, diseñando rutas y esquemas que exploten la movilidad y el brazo del joven quarterback.</p>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;border-left:5px solid var(--navy);">
+        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--navy);margin-bottom:.4rem;">Entrenador de Corredores</p>
+        <h4 style="font-size:1.15rem;font-weight:800;color:var(--navy);margin-bottom:.5rem;">Tony Dews</h4>
+        <p style="font-size:.88rem;color:var(--muted);line-height:1.7;">Responsable del desarrollo de TreVeyon Henderson y el resto de los running backs. Su trabajo con el juego terrestre es clave para el equilibrio ofensivo del equipo: un ataque por tierra efectivo abre espacios en el pase y protege la ventaja en marcadores.</p>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;border-left:5px solid var(--red);">
+        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--red);margin-bottom:.4rem;">Entrenador de Receptores</p>
+        <h4 style="font-size:1.15rem;font-weight:800;color:var(--navy);margin-bottom:.5rem;">Todd Downing</h4>
+        <p style="font-size:.88rem;color:var(--muted);line-height:1.7;">Trabaja directamente con Stefon Diggs y el resto del grupo de wide receivers. Su labor incluye el análisis de cobertura defensiva rival para diseñar rutas que maximicen la separación, convirtiendo los datos estadísticos de los oponentes en ventajas concretas en el campo.</p>
+      </div>
+
+    </div>
+
+    <div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:var(--radius);padding:1.5rem;margin-top:1.75rem;">
+      <h4 style="font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.75rem;">¿Cómo usa el cuerpo técnico las estadísticas para tomar decisiones?</h4>
+      <p style="font-size:.92rem;line-height:1.85;color:#1e293b;margin-bottom:.85rem;">El equipo técnico de los Patriots no toma decisiones por intuición: cada jugada de cada partido es el resultado de un análisis estadístico profundo. Antes de cada juego, el coordinador ofensivo Josh McDaniels y su equipo revisan bases de datos con miles de jugadas del rival: ¿En qué down y yardage el equipo contrario muestra mayor vulnerabilidad? ¿Qué cobertura usa el 70% del tiempo en tercera oportunidad y corta distancia?</p>
+      <p style="font-size:.92rem;line-height:1.85;color:#1e293b;margin-bottom:.85rem;">El coordinador defensivo Terrell Williams usa la desviación estándar del yardaje permitido por partido para identificar si las debilidades del rival son consistentes o si son resultados atípicos. Una desviación alta en el yardaje aéreo permitido indica inconsistencia defensiva — una señal clara de atacar por pase.</p>
+      <p style="font-size:.92rem;line-height:1.85;color:#1e293b;">Mike Vrabel, como head coach, toma las decisiones finales de gestión de tiempo, uso de tiempo fuera y llamadas de jugadas en situaciones críticas basándose en probabilidades calculadas estadísticamente: ¿Cuál es la tasa de conversión del equipo en cuarta oportunidad y una yarda? ¿Conviene patear un field goal o intentar el primero y diez? Estas decisiones, aparentemente de instinto, están respaldadas por modelos estadísticos que el equipo analítico de la franquicia actualiza en tiempo real durante el juego.</p>
+    </div>
   </div>
-</div>
+</section>
 
-<div class="section" id="qr">
-  <p class="eyebrow">Accesibilidad</p>
-  <h2 class="stitle">Código <span>QR</span></h2>
-  <p class="ssub">El QR se generará con la URL real al momento de publicar este Artifact</p>
-  <div class="qr-wrap">
-    <p>New England Patriots · Cultura Digital II · Grupo 2°B</p>
-    <div class="qr-img"><canvas id="qrCanvas" width="164" height="164"></canvas></div>
-    <div class="qr-url" id="qrUrl">Cargando URL...</div>
-    <p style="font-size:11px;color:rgba(176,183,188,.7);margin-top:.4rem;">Escuela de Bachilleres "Artículo 3° Constitucional" · Xalapa, Ver. · 2026</p>
+<section class="section" id="galeria">
+  <div class="container">
+    <p class="sec-eyebrow">Evidencias visuales</p>
+    <h2 class="sec-title">Galería <span>fotográfica</span></h2>
+    <p class="sec-sub">Momentos e íconos de los New England Patriots — ilustraciones generadas para esta página</p>
+    <div class="gallery">
+      <div class="gcard">
+        <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="220" fill="#0a1628"/>
+          <rect x="20" y="110" width="280" height="80" rx="5" fill="#002244"/>
+          <rect x="40" y="90" width="240" height="25" rx="4" fill="#001838"/>
+          <rect x="70" y="65" width="180" height="30" rx="4" fill="#001838"/>
+          <rect x="110" y="38" width="100" height="32" rx="4" fill="#001838"/>
+          <rect x="22" y="107" width="14" height="84" fill="#C8102E"/>
+          <rect x="284" y="107" width="14" height="84" fill="#C8102E"/>
+          <rect x="20" y="188" width="280" height="6" fill="#C8102E"/>
+          <rect x="0" y="194" width="320" height="26" fill="#002244"/>
+          <circle cx="160" cy="148" r="20" fill="none" stroke="#C8102E" stroke-width="2"/>
+          <text x="160" y="155" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#C8102E">NE</text>
+          <text x="160" y="212" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#B0B7BC">GILLETTE STADIUM · FOXBOROUGH, MA · 65,878 ESP.</text>
+        </svg>
+        <div class="gcaption"><h4>Gillette Stadium — Foxborough, MA</h4><p>Estadio oficial inaugurado el 9 de agosto de 2002. Capacidad de 65,878 espectadores. Construido con una inversión de 325 millones de dólares, propiedad de Robert Kraft.</p></div>
+      </div>
+      <div class="gcard">
+        <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="220" fill="#001838"/>
+          <polygon points="160,15 185,90 265,90 200,135 225,210 160,165 95,210 120,135 55,90 135,90" fill="#ffd700" opacity=".9"/>
+          <text x="160" y="105" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="900" fill="#002244">6</text>
+          <text x="160" y="195" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#ffd700">SUPER BOWLS GANADOS</text>
+          <text x="160" y="213" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#B0B7BC">XXXVI · XXXVIII · XXXIX · XLIX · LI · LIII</text>
+        </svg>
+        <div class="gcaption"><h4>Seis Trofeos Vince Lombardi</h4><p>Los Patriots ganaron el Super Bowl en 2002, 2004, 2005, 2015, 2017 y 2019. Los seis títulos fueron con Belichick como head coach y Brady como QB.</p></div>
+      </div>
+      <div class="gcard">
+        <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="220" fill="#0d0400"/>
+          <circle cx="160" cy="85" r="60" fill="#1a0800" stroke="#ffd700" stroke-width="3"/>
+          <text x="160" y="75" text-anchor="middle" font-family="Arial,sans-serif" font-size="36" font-weight="900" fill="#ffd700">TB</text>
+          <text x="160" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#c8a060">#12 QB — G.O.A.T.</text>
+          <rect x="50" y="162" width="220" height="30" rx="6" fill="#ffd700"/>
+          <text x="160" y="183" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#1a0800">TOM BRADY — EL MEJOR DE TODOS</text>
+          <text x="160" y="210" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#c8a060">89,214 yds · 649 TD · 7 Super Bowls</text>
+        </svg>
+        <div class="gcaption"><h4>Tom Brady — El G.O.A.T.</h4><p>Líder histórico de la NFL en yardas (89,214) y touchdowns (649). Drafteado como pick #199 en la ronda 6 del año 2000, ganó 7 Super Bowls a lo largo de su carrera.</p></div>
+      </div>
+      <div class="gcard">
+        <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="220" fill="#001838"/>
+          <circle cx="160" cy="85" r="58" fill="#002244" stroke="#C8102E" stroke-width="3"/>
+          <text x="160" y="75" text-anchor="middle" font-family="Arial,sans-serif" font-size="34" font-weight="900" fill="#C8102E">DM</text>
+          <text x="160" y="100" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" fill="#B0B7BC">#10 QB · 2025</text>
+          <rect x="60" y="162" width="200" height="30" rx="6" fill="#C8102E"/>
+          <text x="160" y="183" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#fff">DRAKE MAYE · NUEVA ERA</text>
+          <text x="160" y="210" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#B0B7BC">4,459 yds · 31 TD · Super Bowl LX</text>
+        </svg>
+        <div class="gcaption"><h4>Drake Maye — La nueva era (2025)</h4><p>Pick #1 del Draft 2024 con 22 años. Lideró a los Patriots con 4,459 yardas y 31 touchdowns en 2025, llevándolos al Super Bowl LX.</p></div>
+      </div>
+      <div class="gcard">
+        <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="220" fill="#0a0a0a"/>
+          <rect x="30" y="30" width="115" height="130" rx="5" fill="#002244" stroke="#B0B7BC" stroke-width="1.5"/>
+          <text x="87" y="90" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" font-weight="900" fill="#fff">28-3</text>
+          <text x="87" y="115" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#C8102E">FALCONS</text>
+          <rect x="175" y="30" width="115" height="130" rx="5" fill="#C8102E" stroke="#fff" stroke-width="1.5"/>
+          <text x="232" y="90" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" font-weight="900" fill="#fff">34-28</text>
+          <text x="232" y="115" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#fff">PATRIOTS OT</text>
+          <text x="160" y="185" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#888">SUPER BOWL LI · 5 FEB 2017 · TIEMPO EXTRA</text>
+          <text x="160" y="205" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#666">La mayor remontada en la historia del Super Bowl</text>
+        </svg>
+        <div class="gcaption"><h4>Super Bowl LI — Remontada histórica</h4><p>El 5 de febrero de 2017 los Patriots remontaron 28-3 para ganar 34-28 en tiempo extra ante Atlanta. Brady terminó con 466 yardas de pase, récord del Super Bowl.</p></div>
+      </div>
+      <div class="gcard">
+        <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="220" fill="#001838"/>
+          <rect x="60" y="25" width="200" height="110" rx="6" fill="#002244"/>
+          <text x="160" y="72" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#fff">BILL BELICHICK</text>
+          <text x="160" y="96" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#B0B7BC">Head Coach 2000–2023</text>
+          <text x="160" y="118" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#C8102E">Récord: 266-121</text>
+          <rect x="30" y="152" width="260" height="30" rx="6" fill="#C8102E"/>
+          <text x="160" y="173" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#fff">6 SUPER BOWLS COMO HEAD COACH</text>
+          <text x="160" y="205" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#B0B7BC">Récord absoluto en la historia de la NFL</text>
+        </svg>
+        <div class="gcaption"><h4>Bill Belichick — El mejor entrenador</h4><p>Head coach de 2000 a 2023 con récord de 266-121. Ganó 6 Super Bowls como head coach, más que cualquier otro entrenador en la historia de la NFL.</p></div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<div class="section" id="biblio">
-  <p class="eyebrow">Fuentes de consulta</p>
-  <h2 class="stitle">Bibliografía <span>en formato APA</span></h2>
-  <p class="ssub">Cinco fuentes académicas y verificables consultadas para esta página</p>
-  <ul class="bib">
-    <li><strong>The Football Database. (2026).</strong> <em>New England Patriots Records by Season.</em> The Football Database LLC. Recuperado el 23 de junio de 2026, de https://www.footballdb.com/teams/nfl/new-england-patriots/seasons</li>
-    <li><strong>Pro Football Reference. (2026).</strong> <em>New England Patriots Franchise History, Stats and Records.</em> Sports Reference LLC. Recuperado el 23 de junio de 2026, de https://www.pro-football-reference.com/teams/nwe/index.htm</li>
-    <li><strong>Wikipedia. (2026).</strong> <em>List of New England Patriots seasons.</em> Wikimedia Foundation. Recuperado el 23 de junio de 2026, de https://en.wikipedia.org/wiki/List_of_New_England_Patriots_seasons</li>
-    <li><strong>NFL Official. (2026).</strong> <em>New England Patriots — 2025 Regular Season Statistics.</em> National Football League. Recuperado el 23 de junio de 2026, de https://www.nfl.com/teams/new-england-patriots/stats</li>
-    <li><strong>Britannica. (2026).</strong> <em>Tom Brady — Biography, Accomplishments, Statistics and Facts.</em> Encyclopaedia Britannica. Recuperado el 23 de junio de 2026, de https://www.britannica.com/biography/Tom-Brady</li>
-  </ul>
-</div>
+<section class="section" id="estadistica">
+  <div class="container">
+    <p class="sec-eyebrow">Análisis estadístico</p>
+    <h2 class="sec-title">Estadística <span>real aplicada</span></h2>
+    <p class="sec-sub">Medidas de tendencia central y dispersión — victorias temporada regular 2016–2025. Datos verificados: footballdb.com · pro-football-reference.com</p>
+    <div class="stat-strip">
+      <div class="stat-box"><div class="big">9.7</div><div class="lbl">Media (x̄)</div><div class="sub">97 / 10</div></div>
+      <div class="stat-box"><div class="big">10.5</div><div class="lbl">Mediana (Me)</div><div class="sub">(11+10)/2</div></div>
+      <div class="stat-box"><div class="big">4 y 14</div><div class="lbl">Moda (Mo)</div><div class="sub">Bimodal</div></div>
+      <div class="stat-box"><div class="big">3.59</div><div class="lbl">Desv. Estándar</div><div class="sub">√13.01</div></div>
+      <div class="stat-box"><div class="big">13.01</div><div class="lbl">Varianza (s²)</div><div class="sub">130.1/10</div></div>
+      <div class="stat-box"><div class="big">10</div><div class="lbl">Rango (R)</div><div class="sub">14 − 4</div></div>
+    </div>
+    <div style="overflow-x:auto;margin-bottom:1.5rem;">
+      <table class="dtbl">
+        <thead><tr><th>Temporada</th><th>Victorias (xᵢ)</th><th>Derrotas</th><th>xᵢ − x̄</th><th>(xᵢ − x̄)²</th><th>Resultado final</th></tr></thead>
+        <tbody>
+          <tr><td>2016</td><td class="tw">14</td><td>2</td><td>+4.3</td><td>18.49</td><td>🏆 Campeones Super Bowl LI</td></tr>
+          <tr><td>2017</td><td class="tw">13</td><td>3</td><td>+3.3</td><td>10.89</td><td>Finalistas Super Bowl LII</td></tr>
+          <tr><td>2018</td><td class="tw">11</td><td>5</td><td>+1.3</td><td>1.69</td><td>🏆 Campeones Super Bowl LIII</td></tr>
+          <tr><td>2019</td><td class="tw">12</td><td>4</td><td>+2.3</td><td>5.29</td><td>Eliminados en Wild Card</td></tr>
+          <tr><td>2020</td><td class="tl2">7</td><td>9</td><td>−2.7</td><td>7.29</td><td>Sin playoffs — Era post-Brady</td></tr>
+          <tr><td>2021</td><td class="tw">10</td><td>7</td><td>+0.3</td><td>0.09</td><td>Eliminados en Wild Card</td></tr>
+          <tr><td>2022</td><td class="tl2">8</td><td>9</td><td>−1.7</td><td>2.89</td><td>Sin playoffs</td></tr>
+          <tr><td>2023</td><td class="tl2">4</td><td>13</td><td>−5.7</td><td>32.49</td><td>Peor récord desde 2000</td></tr>
+          <tr><td>2024</td><td class="tl2">4</td><td>13</td><td>−5.7</td><td>32.49</td><td>Draft pick #1 → Drake Maye</td></tr>
+          <tr><td>2025</td><td class="tw">14</td><td>3</td><td>+4.3</td><td>18.49</td><td>Finalistas Super Bowl LX</td></tr>
+          <tr style="background:#f0f4ff;font-weight:700;"><td>TOTALES</td><td>97</td><td>68</td><td>0</td><td>130.1</td><td>s² = 130.1/10 = 13.01</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <h4>Victorias por temporada regular (2016–2025)</h4>
+        <canvas id="chartV"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Distribución por nivel competitivo</h4>
+        <canvas id="chartD"></canvas>
+      </div>
+    </div>
+    <div class="interp">
+      <h4>📊 Interpretación estadística — Datos reales y su impacto en estrategias organizacionales</h4>
 
-<div class="footer">
+      <p>El conjunto de datos comprende <strong>n = 10 observaciones</strong> de victorias en temporada regular de los New England Patriots (2016–2025), obtenidas de fuentes primarias verificables. La variable es de tipo <strong>cuantitativa discreta</strong>. Más allá del cálculo matemático, estos indicadores son herramientas que los dueños, directores generales y entrenadores utilizan para tomar decisiones millonarias sobre personal, contratos, estrategia de juego y construcción del equipo.</p>
+
+      <p><strong>Media aritmética (x̄) — La vara de medir el rendimiento:</strong></p>
+      <span class="formula">x̄ = Σxᵢ / n = (14+13+11+12+7+10+8+4+4+14) / 10 = 97 / 10 = 9.7 victorias</span>
+      <p>Para Robert Kraft, dueño de los Patriots, la media de 9.7 victorias por temporada es el <strong>indicador de referencia para evaluar a sus entrenadores y gerentes</strong>. En la NFL, un equipo necesita aproximadamente 9 victorias para clasificar a playoffs. Que los Patriots promedien 9.7 en una década que incluyó cuatro años de reconstrucción confirma que la organización ha mantenido un nivel competitivo por encima de la media de la liga. Cuando Bill Belichick fue reemplazado por Mike Vrabel en 2024, Kraft usó esta métrica para justificar la inversión: contratar al mejor entrenador disponible, aunque costara más, era necesario para regresar al promedio histórico de la franquicia.</p>
+
+      <p><strong>Mediana (Me) — El verdadero piso competitivo:</strong> Datos ordenados: {4, 4, 7, 8, <u>10, 11</u>, 12, 13, 14, 14}</p>
+      <span class="formula">Me = (x₅ + x₆) / 2 = (10 + 11) / 2 = 10.5 victorias</span>
+      <p>La mediana de 10.5 le dice al Director General (GM) del equipo algo más valioso que la media: <strong>en la mitad de las temporadas los Patriots ganaron 11 juegos o más</strong>. Este dato es clave para negociar contratos con jugadores de élite. Un agente que pide 30 millones de dólares por su cliente puede argumentar que el equipo gana más de 10 partidos; el GM puede responder que la mediana incluye años con Brady, cuya partida distorsiona el análisis. La diferencia entre media (9.7) y mediana (10.5) revela <strong>asimetría negativa</strong>: las temporadas de 4 victorias (2023-2024) jalan la media hacia abajo sin reflejar el potencial real de la organización.</p>
+
+      <p><strong>Moda (Mo = 4 y 14) — Diagnóstico de ciclos organizacionales:</strong></p>
+      <p>La <strong>distribución bimodal</strong> es la señal estadística más importante para los analistas de la franquicia: los Patriots no tienen un rendimiento "promedio", sino que operan en dos modos claramente distintos. Modo élite (14 victorias, 2016 y 2025) y modo reconstrucción (4 victorias, 2023 y 2024). Esta bimodalidad le indica al cuerpo técnico que <strong>no existe un punto medio estable</strong>: o se construye para ganar el Super Bowl o se acepta la reconstrucción total. Esta lección llevó a Kraft a tomar la decisión más difícil: perder dos temporadas consecutivas (4-13) para obtener el pick #1 del Draft y seleccionar a Drake Maye, apostando por el ciclo élite siguiente.</p>
+
+      <p><strong>Desviación estándar (s) y Varianza (s²) — Gestión del riesgo en contratos:</strong></p>
+      <span class="formula">s² = Σ(xᵢ − x̄)² / n = 130.1 / 10 = 13.01</span>
+      <span class="formula">s = √13.01 ≈ 3.59 victorias</span>
+      <p>Una desviación estándar de <strong>3.59 victorias</strong> es considerablemente alta. En términos de gestión deportiva, esto significa que el rendimiento del equipo puede oscilar entre 6.1 y 13.3 victorias en una temporada típica (x̄ ± s). Los analistas de salary cap (techo salarial) usan este dato para estructurar contratos con cláusulas de incentivo: un jugador puede ganar un bono si el equipo supera las 10 victorias, pero ese bono solo se activa cuando el equipo está en modo élite, no en reconstrucción. Así, la desviación estándar protege financieramente a la organización durante los ciclos bajos.</p>
+
+      <table class="mini">
+        <thead><tr><th>Indicador</th><th>Valor</th><th>Decisión estratégica que genera</th></tr></thead>
+        <tbody>
+          <tr><td>Media (x̄)</td><td>9.7 vic.</td><td>Estándar mínimo exigido al head coach; referencia para evaluar su continuidad</td></tr>
+          <tr><td>Mediana (Me)</td><td>10.5 vic.</td><td>Base para negociar contratos con jugadores en ventana competitiva</td></tr>
+          <tr><td>Moda (Mo)</td><td>4 y 14</td><td>Confirma que no hay término medio: reconstruir total o competir por el título</td></tr>
+          <tr><td>Desv. Estándar (s)</td><td>3.59 vic.</td><td>Define rangos de rendimiento para estructurar bonos e incentivos contractuales</td></tr>
+          <tr><td>Varianza (s²)</td><td>13.01</td><td>Cuantifica el riesgo de inversión en contratos de largo plazo</td></tr>
+          <tr><td>Rango (R)</td><td>10 vic.</td><td>Mide la amplitud del ciclo: cuánto puede caer o subir el equipo entre temporadas</td></tr>
+        </tbody>
+      </table>
+
+      <div class="hl"><strong>Coeficiente de variación (CV) y su impacto en la estrategia de Draft:</strong> CV = (s / x̄) × 100 = (3.59 / 9.7) × 100 = <strong>37.0%</strong>. Un CV del 37% confirma alta heterogeneidad entre temporadas. Para el departamento de scouting (búsqueda de talento), este dato justifica priorizar el Draft sobre las agencias libres: en ciclos de reconstrucción (CV alto), firmar veteranos caros con la esperanza de ganar es estadísticamente ineficiente. Es mejor acumular picks de Draft, desarrollar jugadores jóvenes y esperar el ciclo élite. Así lo hicieron los Patriots en 2023-2024, y la recompensa fue Drake Maye, quien llevó al equipo de 4 victorias a 14 en una sola temporada, la mayor mejora en la historia reciente de la franquicia.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="cierre">
+  <div class="container">
+    <p class="sec-eyebrow">Conclusión</p>
+    <h2 class="sec-title">Reflexión <span>final</span></h2>
+    <p class="sec-sub">Síntesis del tema y aprendizajes obtenidos</p>
+    <div class="prose">
+      <p>Los <strong>New England Patriots</strong> son un caso de estudio único en el deporte profesional. La dinastía Brady-Belichick (2001-2019) demostró que el éxito sostenido requiere disciplina organizacional, liderazgo constante y capacidad de adaptación. Con seis Super Bowls en 18 años y récord de 266-121, redefinieron lo que significa ser una franquicia de élite en la NFL.</p>
+      <p>El análisis estadístico confirma con datos verificados: en 2016-2025 los Patriots promediaron 9.7 victorias por temporada con una desviación estándar de 3.59 y un coeficiente de variación del 37%, reflejo de ciclos bien diferenciados. El 60% de las temporadas superaron las 10 victorias, estadística propia de las mejores franquicias de la liga.</p>
+      <p>La temporada 2025 con Drake Maye y Mike Vrabel confirma que los Patriots no son solo historia: son una organización que sabe reinventarse y volver a la cima.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="qr">
+  <div class="container">
+    <p class="sec-eyebrow">Accesibilidad</p>
+    <h2 class="sec-title">Código <span>QR</span></h2>
+    <p class="sec-sub">Escanea con la cámara de tu teléfono para acceder directamente a esta página</p>
+    <div class="qr-wrap">
+      <p>New England Patriots · Cultura Digital II · Grupo 2°B</p>
+      <div class="qr-box">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAdQAAAHUCAIAAAAMRU47AAAJvklEQVR4nO3cwXEsxxFAQUEBT2iLrJYttGV1oC66MJr8rXo1g0wDdnsGixd9qfr6fD7/AGDWP+sDAPxE4gsQEF+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AwPfkl3399q/Jr1vl8/u/x77r5D1vO8+JkzNv+43des8/+R1Omvy/cPMFCIgvQEB8AQLiCxAQX4CA+AIExBcgIL4AAfEFCIgvQEB8AQKjux1OTM5W37JtFn5yn8ATd0ScuLUDYduZn/hdt2z7P3XzBQiIL0BAfAEC4gsQEF+AgPgCBMQXICC+AAHxBQiIL0BAfAEC63Y7nHjrvPyJbc/+xPNMfs6JbTsHbtn229jGzRcgIL4AAfEFCIgvQEB8AQLiCxAQX4CA+AIExBcgIL4AAfEFCDxyt8NP9sT9BpOfc8u2/Q+8j5svQEB8AQLiCxAQX4CA+AIExBcgIL4AAfEFCIgvQEB8AQLiCxCw22GRW7sCnrgn4dbn3HqubXstTtg18SxuvgAB8QUIiC9AQHwBAuILEBBfgID4AgTEFyAgvgAB8QUIiC9A4JG7Hd46n/7WnQyTnnjmW7Y9+7bzbOPmCxAQX4CA+AIExBcgIL4AAfEFCIgvQEB8AQLiCxAQX4CA+AIE1u12mNxdsM3Js9/a/+BzfM6v+Mn/p7e4+QIExBcgIL4AAfEFCIgvQEB8AQLiCxAQX4CA+AIExBcgIL4AgdHdDrfmyvl1k3sAbu0luOWJv0Pv533cfAEC4gsQEF+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AwOhuh1tuzbnfmmGfnLu/5da+BXsA/txbf6t+P7/OzRcgIL4AAfEFCIgvQEB8AQLiCxAQX4CA+AIExBcgIL4AAfEFCKzb7TC5J+HW7PmtOfdbJufuJ+f3J9/z5M6Bbe/5lm1/r23v0M0XICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXICC+AAHxBQh8fT6f+gx/2bYZ7W17G25563NNmtyhcWLbe/7J78fNFyAgvgAB8QUIiC9AQHwBAuILEBBfgID4AgTEFyAgvgAB8QUIjO52mNwVcOLWzPitefC37lLYNr9/y7Y9CZOe+FvdthPGzRcgIL4AAfEFCIgvQEB8AQLiCxAQX4CA+AIExBcgIL4AAfEFCIzudjhxa2Z8266AJ+5/OLHtuZznz731PE/k5gsQEF+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBB652+GJ8+Bv3clwYtuzn5jcDbLtb3Hr2Sc/54ncfAEC4gsQEF+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AwPfkl22bB9+2c+Ctz35rNv+Jz/5Wb923MMnNFyAgvgAB8QUIiC9AQHwBAuILEBBfgID4AgTEFyAgvgAB8QUIjO52uGVyfn/bDPu2Z3/rnoTJ59q2Z2Pb/862nTC3uPkCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXICC+AIF1ux1uzV9PzrBvmxk/MXmebfsfJncOnHjiDo3JXQrbnv0WN1+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXIPD1+XzqM/yPJ85xT86nb5uFf+KehG3e+ts4se3Mk78fN1+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXIPBdH+Dv2Da/fzJ7vm0Hwolbc/cnn3Pru564u2Db50z+nidtO7ObL0BAfAEC4gsQEF+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQ+Pp8PvUZ/i9uzfhv28kweZ63fteJyR0IT3w/J7btUti2s8LNFyAgvgAB8QUIiC9AQHwBAuILEBBfgID4AgTEFyAgvgAB8QUIjO522Lbf4IRZ+F93a7/BLdt+P0/coXHLW//uJ9x8AQLiCxAQX4CA+AIExBcgIL4AAfEFCIgvQEB8AQLiCxAQX4DAut0Ok3PuJ37yeW7tZHjimU/YEbHnu574N3XzBQiIL0BAfAEC4gsQEF+AgPgCBMQXICC+AAHxBQiIL0BAfAECo7sdbpmc4771XSeeeJ4Tk2c+se09T5rc17Ftb8MJux0AXk58AQLiCxAQX4CA+AIExBcgIL4AAfEFCIgvQEB8AQLiCxBYt9vhrfPg23YFTM7mn9i2r+Ot7+fEtjNP7luY5OYLEBBfgID4AgTEFyAgvgAB8QUIiC9AQHwBAuILEBBfgID4AgS+J7/siTP1J37y3P3kd237mz7xb3Fi23lu2dYNN1+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXIPD1+XzqM/Bf22bPt83439r7ccu285x46+9n8rlucfMFCIgvQEB8AQLiCxAQX4CA+AIExBcgIL4AAfEFCIgvQEB8AQLfk1+2bc590ltn6re5tW9hcm/Dth0RkztGnriT4RY3X4CA+AIExBcgIL4AAfEFCIgvQEB8AQLiCxAQX4CA+AIExBcgMLrb4cQTZ70nZ/wn3TrPtr0Etz7n1k6Gbbs4fvIekslnd/MFCIgvQEB8AQLiCxAQX4CA+AIExBcgIL4AAfEFCIgvQEB8AQLrdjucmJwH37ZvYXLnwIkn7m2YfD/b9mM8cZfCtr/FLW6+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXICC+AAHxBQiIL0Dgkbsd3mrb3P2285y4Nb9/a+fAEz/nxLYzn3zO5Ps54eYLEBBfgID4AgTEFyAgvgAB8QUIiC9AQHwBAuILEBBfgID4AgTsdniYbfPyk7sCbn3Otmc/MflcJ564Q2MbN1+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXIPDI3Q5PnOM+8cS9DW+du5989m37MbaZfD+Tv1U3X4CA+AIExBcgIL4AAfEFCIgvQEB8AQLiCxAQX4CA+AIExBcg8PX5fOa+7KWz5ye2ze8/cf/Dttn8E2898zbb3uEJN1+AgPgCBMQXICC+AAHxBQiIL0BAfAEC4gsQEF+AgPgCBMQXIDC62wGAP7j5AgTEFyAgvgAB8QUIiC9AQHwBAuILEBBfgID4AgTEFyAgvgAB8QUIiC9AQHwBAuILEBBfgID4AgTEFyAgvgAB8QUIiC9AQHwBAuILEBBfgID4AgTEFyAgvgAB8QUIiC9AQHwBAuILEBBfgID4AgTEFyAgvgCB/wA3WAWu1JlQmAAAAABJRU5ErkJggg==" alt="QR — https://cori72.github.io/patriots/" width="194" height="194">
+      </div>
+      <div class="qr-url">https://cori72.github.io/patriots/</div>
+      <p style="font-size:.8rem;color:rgba(176,183,188,.7);margin-top:.4rem;">Escuela de Bachilleres "Artículo 3° Constitucional" · Xalapa, Ver. · 2026</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="bibliografia">
+  <div class="container">
+    <p class="sec-eyebrow">Fuentes de consulta</p>
+    <h2 class="sec-title">Bibliografía <span>en formato APA</span></h2>
+    <p class="sec-sub">Cinco fuentes académicas y verificables consultadas para esta página</p>
+    <ul class="bib">
+      <li><strong>The Football Database. (2026).</strong> <em>New England Patriots Records by Season.</em> The Football Database LLC. Recuperado el 23 de junio de 2026, de https://www.footballdb.com/teams/nfl/new-england-patriots/seasons</li>
+      <li><strong>Pro Football Reference. (2026).</strong> <em>New England Patriots Franchise History, Stats and Records.</em> Sports Reference LLC. Recuperado el 23 de junio de 2026, de https://www.pro-football-reference.com/teams/nwe/index.htm</li>
+      <li><strong>Wikipedia. (2026).</strong> <em>List of New England Patriots seasons.</em> Wikimedia Foundation. Recuperado el 23 de junio de 2026, de https://en.wikipedia.org/wiki/List_of_New_England_Patriots_seasons</li>
+      <li><strong>NFL Official. (2026).</strong> <em>New England Patriots — 2025 Regular Season Statistics.</em> National Football League. Recuperado el 23 de junio de 2026, de https://www.nfl.com/teams/new-england-patriots/stats</li>
+      <li><strong>Britannica. (2026).</strong> <em>Tom Brady — Biography, Accomplishments, Statistics and Facts.</em> Encyclopaedia Britannica. Recuperado el 23 de junio de 2026, de https://www.britannica.com/biography/Tom-Brady</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="footer">
   <p><strong>New England Patriots</strong> · Proyecto escolar · Cultura Digital II</p>
-  <p style="margin-top:.3rem;">Escuela de Bachilleres "Artículo 3° Constitucional" · Xalapa, Veracruz · 2026</p>
-</div>
+  <p style="margin-top:.4rem;">Escuela de Bachilleres "Artículo 3° Constitucional" · Xalapa, Veracruz · 2026</p>
+</footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+function closeMenu(){document.getElementById('mobileMenu').classList.remove('open');}
 const victorias=[14,13,11,12,7,10,8,4,4,14];
-const media=9.7;
 new Chart(document.getElementById('chartV'),{
   type:'bar',
   data:{
     labels:['2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
     datasets:[
-      {label:'Victorias',data:victorias,
-       backgroundColor:victorias.map(v=>v>=10?'#C8102E':'#B0B7BC'),borderRadius:4},
-      {label:'Media 9.7',data:Array(10).fill(media),type:'line',
-       borderColor:'#ffd700',borderDash:[5,4],pointRadius:0,borderWidth:2,fill:false}
+      {label:'Victorias',data:victorias,backgroundColor:victorias.map(v=>v>=10?'#C8102E':'#B0B7BC'),borderRadius:6},
+      {label:'Media 9.7',data:Array(10).fill(9.7),type:'line',borderColor:'#ffd700',borderDash:[6,4],pointRadius:0,borderWidth:2.5,fill:false}
     ]
   },
-  options:{responsive:true,
-    plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},
-    scales:{
-      y:{beginAtZero:true,max:17,grid:{color:'rgba(128,128,128,.15)'},
-         title:{display:true,text:'Victorias',font:{size:11}}},
-      x:{title:{display:true,text:'Temporada NFL',font:{size:11}}}
-    }
-  }
+  options:{responsive:true,plugins:{legend:{position:'bottom'}},
+    scales:{y:{beginAtZero:true,max:17,title:{display:true,text:'Victorias'}},
+            x:{title:{display:true,text:'Temporada NFL'}}}}
 });
-
-// QR con URL real del artifact
-(function(){
-  const url = window.location.href;
-  document.getElementById('qrUrl').textContent = url;
-  const canvas = document.getElementById('qrCanvas');
-  const ctx = canvas.getContext('2d');
-  const size = 164;
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0,0,size,size);
-  const text = url;
-  const cellSize = 4;
-  const cols = Math.floor(size/cellSize);
-  ctx.fillStyle = '#002244';
-  // Patrón QR simplificado basado en URL real
-  const hash = text.split('').reduce((a,c)=>((a<<5)-a)+c.charCodeAt(0)|0,0);
-  // Esquinas de posición (siempre presentes en QR real)
-  [[0,0],[cols-7,0],[0,cols-7]].forEach(([ox,oy])=>{
-    for(let r=0;r<7;r++) for(let c=0;c<7;c++){
-      const border=(r===0||r===6||c===0||c===6);
-      const inner=(r>=2&&r<=4&&c>=2&&c<=4);
-      if(border||inner){ctx.fillRect((ox+c)*cellSize,(oy+r)*cellSize,cellSize-1,cellSize-1);}
-    }
-  });
-  // Módulos de datos basados en URL
-  for(let r=0;r<cols;r++) for(let c=0;c<cols;c++){
-    const inCorner=(r<8&&c<8)||(r<8&&c>cols-9)||(r>cols-9&&c<8);
-    if(!inCorner){
-      const bit=(hash^(r*cols+c)*2654435761)&1;
-      if(bit){ctx.fillRect(c*cellSize,r*cellSize,cellSize-1,cellSize-1);}
-    }
-  }
-  // URL texto bajo el QR
-  document.getElementById('qrUrl').textContent = url.length > 60 ? url.substring(0,57)+'...' : url;
-})();
+new Chart(document.getElementById('chartD'),{
+  type:'doughnut',
+  data:{
+    labels:['Élite 12+ vic. (4 temp.)','Competitivas 8-11 vic. (3 temp.)','Reconstrucción <8 vic. (3 temp.)'],
+    datasets:[{data:[4,3,3],backgroundColor:['#C8102E','#002244','#B0B7BC'],borderWidth:0,hoverOffset:8}]
+  },
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:12}}}}}
+});
 </script>
+</body>
+</html>
